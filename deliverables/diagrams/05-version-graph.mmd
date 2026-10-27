@@ -1,0 +1,12 @@
+flowchart LR
+  v1 --> v2 --> v3 --> v5 --> v6 --> v7["v7 (withdrawn)"]
+  v3 --> v4 --> v8 --> v10
+  v6 -. merged into .-> v10
+  classDef trunk fill:#f2f2f2,stroke:#888,color:#222
+  classDef ca fill:#e8f0ff,stroke:#3b6fd8,color:#222
+  classDef eu fill:#eaf7ea,stroke:#2e8b57,color:#222
+  classDef gone fill:#fff,stroke:#999,stroke-dasharray:4 3,color:#777
+  class v1,v2,v3 trunk
+  class v5,v6 ca
+  class v4,v8,v10 eu
+  class v7 gone

@@ -1,0 +1,15 @@
+sequenceDiagram
+  participant C as Content team
+  participant T as Template DB
+  participant S as Update Service
+  participant P as Projection
+  participant U as Auditor (UI)
+  C->>T: publish Pymes v7 (parents v6, market CA)
+  T-->>S: TemplatePublished
+  Note over S: head(CA) = v7, one write<br/>no engagement is opened
+  Note over S: summaries v5 to v7, v6 to v7<br/>async, verified
+  U->>S: pending for my firm?
+  S->>P: read firm partition
+  P-->>S: firm engagements
+  Note over S: per engagement: newer?<br/>not withdrawn? not declined?
+  S-->>U: 312 pending (E1: v5 to v7, includes v6)

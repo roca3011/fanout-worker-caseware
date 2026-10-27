@@ -1,0 +1,6 @@
+flowchart LR
+  CT([Content team]) -->|1. publishes<br/>a new version| TL[(Template library<br/>existing)]
+  TL -->|2. notifies| US[Update service<br/><b>new</b>]
+  US -->|3. pending updates<br/>+ plain summary| AU([Auditor])
+  AU -->|4. apply<br/>or decline| EF[(Engagement files<br/>existing)]
+  EF -.->|keeps it informed of each file's version| US

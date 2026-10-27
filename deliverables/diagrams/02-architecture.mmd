@@ -1,0 +1,31 @@
+flowchart TB
+  subgraph Global
+    direction LR
+    TDB[(Template DB<br/>existing)]
+    TUSG[Template Update Service<br/>global: version graph + summaries]
+    LLM[[LLM via Bedrock<br/>template content only]]
+    WORM[(Summaries<br/>S3 Object Lock)]
+  end
+  subgraph Region["Each region (EU / CA / rest)"]
+    UI[UI]
+    ES[Engagement system<br/>existing]
+    Q[[Event queue<br/>at-least-once]]
+    TUSR[Template Update Service<br/>regional]
+    PROJ[(Engagement projection<br/>Aurora PostgreSQL)]
+    LEDGER[(Decision ledger<br/>append-only, same DB)]
+    WQ[(Worker queue + results<br/>same DB)]
+    FAN[Fan-out worker<br/>Part 2]
+  end
+  TDB -- TemplatePublished / Withdrawn --> TUSG
+  TUSG -- diff --> TDB
+  TUSG <--> LLM
+  TUSG --> WORM
+  TUSG -- graph + summaries replicated --> TUSR
+  UI -- pending per firm --> TUSR
+  ES -- pending for one engagement on open --> TUSR
+  ES -- outbox events with seq --> Q --> TUSR
+  TUSR --> PROJ
+  TUSR --> LEDGER
+  TUSR -- unverified engagements --> WQ <--> FAN
+  FAN -- "loads (~1 min each, capped)" --> ES
+  FAN -- writes --> PROJ

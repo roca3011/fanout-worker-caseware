@@ -1,0 +1,5 @@
+flowchart LR
+  L["1. Listen<br/>hooks on, new changes captured"] --> B["2. Backfill<br/>worker re-reads ~800k files"]
+  L --> O["3. Opportunistic fill<br/>every opened file verifies itself"]
+  B --> D["4. Converged<br/>all verified, no cutover"]
+  O --> D
