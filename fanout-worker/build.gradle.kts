@@ -13,8 +13,8 @@ java {
     }
 }
 
-if (projectDir.path.contains("OneDrive")) {
-    layout.buildDirectory = file(System.getenv("LOCALAPPDATA") ?: System.getProperty("java.io.tmpdir")).resolve("fanout-worker-build")
+providers.gradleProperty("externalBuildDir").orNull?.let {
+    layout.buildDirectory = file(it).resolve("fanout-worker-build")
 }
 
 repositories {
